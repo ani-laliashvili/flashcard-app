@@ -6,6 +6,9 @@ import random
 BACKGROUND_COLOR = "#B1DDC6"
 WORD = ''
 WORDS_TO_LEARN = []
+COL1 = ''
+COL2 = ''
+FILE_NAME = 'french_words.csv'
 
 def save_progress():
     WORDS_TO_LEARN.append(WORD)
@@ -21,9 +24,9 @@ def read_data():
     try:
         data=pd.read_csv("data/words_to_learn.csv")
     except FileNotFoundError:
-        data = pd.read_csv("data/french_words.csv")
+        data = pd.read_csv(f"data/{FILE_NAME}")
     except pd.errors.EmptyDataError:
-        data = pd.read_csv("data/french_words.csv")
+        data = pd.read_csv(f"data/{FILE_NAME}")
     return data
 
 def right_answer():
@@ -42,8 +45,8 @@ def new_flashcard():
         WORD = random.choice(data_dict)
         canvas.itemconfig(flashcard_image, image=card_front)
 
-        canvas.itemconfig(title, text='French', fill='black')
-        canvas.itemconfig(word, text=WORD['French'], fill='black')
+        canvas.itemconfig(title, text=COL1, fill='black')
+        canvas.itemconfig(word, text=WORD[COL1], fill='black')
         flip_timer = window.after(3000, flip_card)
     else:
         messagebox.showinfo(title="Learning Complete!", message="All words have been learned. \nFlashcard app will now close.")
@@ -52,11 +55,13 @@ def new_flashcard():
 def flip_card():
     canvas.itemconfig(flashcard_image, image=card_back)
 
-    canvas.itemconfig(title, text='English', fill='white')
-    canvas.itemconfig(word, text=WORD['English'], fill='white')
+    canvas.itemconfig(title, text=COL2, fill='white')
+    canvas.itemconfig(word, text=WORD[COL2], fill='white')
 
 #-----------------UI-----------------#
 data = read_data()
+COL1 = data.columns.values[0]
+COL2 = data.columns.values[1]
 data_dict = data.to_dict(orient="records")
 
 window = tkinter.Tk()
