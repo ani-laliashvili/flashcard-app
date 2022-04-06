@@ -1,4 +1,5 @@
 import tkinter
+from tkinter import messagebox
 import pandas as pd
 import random
 
@@ -35,14 +36,18 @@ def wrong_answer():
 
 #--------------Show answer-----------#
 def new_flashcard():
-    global WORD, flip_timer
-    window.after_cancel(flip_timer)
-    WORD = random.choice(data_dict)
-    canvas.itemconfig(flashcard_image, image=card_front)
+    if len(data_dict) > 0:
+        global WORD, flip_timer
+        window.after_cancel(flip_timer)
+        WORD = random.choice(data_dict)
+        canvas.itemconfig(flashcard_image, image=card_front)
 
-    canvas.itemconfig(title, text='French', fill='black')
-    canvas.itemconfig(word, text=WORD['French'], fill='black')
-    flip_timer = window.after(3000, flip_card)
+        canvas.itemconfig(title, text='French', fill='black')
+        canvas.itemconfig(word, text=WORD['French'], fill='black')
+        flip_timer = window.after(3000, flip_card)
+    else:
+        messagebox.showinfo(title="Learning Complete!", message="All words have been learned. \nFlashcard app will now close.")
+        quit()
 
 def flip_card():
     canvas.itemconfig(flashcard_image, image=card_back)
